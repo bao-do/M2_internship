@@ -34,6 +34,10 @@ E(P, t) = \frac{E(P_0, t)}{r} e^{-jkr}
 where $r$ is the distance between the point source and the point $P$, and $k$ is the wave number of the light, which can be expressed as $k = \frac{n 2 \pi \nu}{c}$, where n is the refractive index of the medium. 
 In general, the amplitude of the wave decreases as it propagates, and the phase of the wave at point $P$ is delayed with respect to the phase at source point $P_0$ by an amount proportional to the distance $r$.
 
+\paragraph{The intensity of wave field} The intensity of a scalar monochromatic wave at point $P$ is defined as the squared magnitude of the complex phasor representation $U(P)$ of the disturbance:
+\begin{equation}
+I(P) = |U(P)|^2
+\end{equation}
 
 \section{Scalar diffraction theory}\label{sec:diffraction}
 
@@ -331,7 +335,7 @@ Applying the binomial expansion to the distance $\len{\vect{P_0P_1}}$, one gets:
 \end{equation}
 Note that we keep only the first two terms of the binomial expansion, which should be sufficient in the case where the distance $z$ is large compared to $(x-\xi)$ and $(y-\eta)$, which is the case of interest here.
 For the term $\len{\vect{P_0P_1}}$ in the denominator, we can also simplify further by using $\len{\vect{P_0P_1}} \approx z$, but this approximation is not valid for one in the nominator as it is involved in the exponent, where even a small error can lead to a significant change in the result. The resulting expression for the complex field at $(x,y)$ therefore becomes:
-\begin{equation}
+\begin{equation}\label{eq:fresnel_integral}
     U(x,y) = \frac{e^{jkz}}{j\lambda z}\int_\Sigma U(\xi,\eta) e^{j\frac{k}{2z}\left((x-\xi)^2 + (y-\eta)^2\right)} \,d\xi d\eta
 \end{equation}
 This formula is known as the \textit{Fresnel integral}
@@ -343,10 +347,148 @@ This formula is known as the \textit{Fresnel integral}
 For a circular aperture of radius 1cm, a circular observation region of size 1cm, and a wavelength of 0.5$\mu m$, this condition would require that the distance z must be  $\gg$ 25cm for ensureing the accuracy. However, this condition is overstringent, and accuracy can be expected for much shorter distances. It is found that the majority of the contribution to the convolution integral comes from a square in the $(\xi,\eta)$ plane, with width $4\sqrt{z \lambda}$, centered on the point $(\xi=x,\eta=y)$. this square grows in size as the distance $z$ increases. \todo{add more arguments, for instance the condition for that the approximation is valide is not quite clear}
 
 \subsection{Point spread function (PSF) of optical systems}
-The most important component of optical 
+The most important component of optical imaging and data processing systems are lenses. A lens is composed of an optically dense material, usualy glass with a refractive index $n > 1$, in which the propagation velocity of light is less than the velocity in air.
+ In this section, we will derive the point spread function (PSF) of a lens.
+\subsubsection{A thin lens as a phase transformation}
+A lens is said to be a thin lens if a ray entering at coordinate $(x,y)$ on one face exits at approximately the same coordinate on the other face, i.e if there is negligible translation of a ray within the lens.
 
+
+Referring to the~\cref{fig:fig51}, let the maximal thickness of the lens (on its axis) be $
+\Delta_0$, and let the thickness at coordinatate $(x,y)$ be $\Delta(x,y)$.
+According to the free-space propagation formula~\cref{eq:free_space}, the total phase delay of a ray passing through the lens at coordinate $(x,y)$ is given by: 
+\begin{equation}
+    \phi(x,y) = k \, n \, \Delta(x,y) + k \, (\Delta_0 - \Delta(x,y))
+\end{equation}
+where n is the refractive index of the lens material, $kn\Delta(x,y)$ is the phase delay introduced by the lens, and $k(\Delta_0 - \Delta(x,y))$ is the phase delay introduced by the remaining region of free space between the two planes.Equivalently, the lens may be represented by a multiplicative phase transformation of the form:
+\begin{equation}\label{eq:phase_delay_lens}
+    t(x,y) =  e^{j \, k \, \Delta_0} \,e^{j \, k \, (n-1) \, \Delta(x,y)}
+\end{equation}
+
+The complex field $U_l'(x,y)$ across the the exit plane immediately behind the lens is then related to the complex field $U_l(x,y)$ across the entrance plane immediately in front of the lens by:
+\begin{equation}
+    U_l'(x,y) = t(x,y) \, U_l(x,y)
+\end{equation}
+The problem remains to find the mathematical form of the theckness function $\Delta(x,y)$ in order that the effects of the lens may be understood.
+
+\subsubsection{The thickness function}
+In order to specify the forms of the phase transformations introduced by a variety of different types of lenses, we first adopt a sign convention: as rays travel from left to right, each convex surface encountered is taken to have a positive radius of curvature, while each concave surface is taken to have a negative radius of curvature. Thus in~\cref{fig:fig51}, the radius of curvature of the left-hand surface of the lens is a positive number $R_1$, while the radius of curvature of the right-hand surface is a negative number $R_2$.
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/figure5.1.png}
+\caption{\label{fig:fig51}The thickness function: (a) front view, (b) side view.}
+\end{figure}
+
+To find the thickness function $\Delta(x,y)$, we split the lens into three regions: the left region $\Delta_1(x,y)$, the middle region $\Delta_2(x,y)$, and the right region $\Delta_3(x,y)$, as illustrated in~\cref{fig:fig52}. the thickness function $\Delta(x,y)$ can then be expressed as:
+\begin{equation}
+    \Delta(x,y) = \Delta_1(x,y) + \Delta_2(x,y) + \Delta_3(x,y)
+\end{equation}
+where $\Delta_1(x,y)$, $\Delta_2(x,y)$, and $\Delta_3(x,y)$ are given derived from the geometry of the lens as follows:
+\begin{align}
+\Delta_1(x,y) &= \Delta_{01} - (R_1 - \sqrt{R_1^2 - (x^2 + y^2)}) \\
+&= \Delta_{01} - R_1\left(1 - \sqrt{1 - \frac{x^2 + y^2}{R_1^2}}\right) 
+\end{align}
+\begin{align}
+\Delta_3(x,y) &= \Delta_{03} - (-R_2 - \sqrt{R_2^2 - (x^2 + y^2)}) \\
+&= \Delta_{03} + R_2\left(1 - \sqrt{1 - \frac{x^2 + y^2}{R_2^2}}\right) 
+\end{align}
+The second region $\Delta_2(x,y)$ is a constant. Therefore, the total thickness is seen to be:
+\begin{equation}
+\Delta(x,y) = \Delta_{0} 
+- R_1\left(1 - \sqrt{1 - \frac{x^2 + y^2}{R_1^2}}\right)
++ R_2\left(1 - \sqrt{1 - \frac{x^2 + y^2}{R_2^2}}\right) 
+\end{equation}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/figure5.2.png}
+\caption{\label{fig:fig52}Calculation of the thickness function: (a) geometry for $\Delta_1(x,y)$, (b) geometry for $\Delta_2(x,y)$, (c) geometry for $\Delta_3(x,y)$.}
+\end{figure}
+
+The expression of the thickness function $\Delta(x,y)$ can be safely simplified if attention is restricted to the region of the lens near the lens axis, or equivalently, if only paraxial rays are considered. Thus we consider only values of $x$ and $y$ sufficiently small to allow the following approximation to be accurate:
+\begin{align}
+\sqrt{1 - \frac{x^2 + y^2}{R_1^2}} &\approx 1 - \frac{x^2 + y^2}{2R_1^2} \\
+\sqrt{1 - \frac{x^2 + y^2}{R_2^2}} &\approx 1 - \frac{x^2 + y^2}{2R_2^2} \\
+\Delta(x,y) &\approx \Delta_0 - \frac{x^2 + y^2}{2} \left( \frac{1}{R_1} - \frac{1}{R_2} \right)
+\end{align}
+
+With the help of these approximations, the thickness function becomes:
+\begin{equation}\label{eq:total_thickness}
+    \Delta(x,y) \approx \Delta_0 - \frac{x^2 + y^2}{2} \left( \frac{1}{R_1} - \frac{1}{R_2} \right)
+\end{equation}
+
+\subsubsection{The phase transformation by lenses}
+Substituting~\cref{eq:total_thickness} into~\cref{eq:phase_delay_lens} yields the following expression for the phase transformation introduced by the lens:
+\begin{equation}
+    t(x,y) = e^{j \, k \, \Delta_0} \, e^{j \, k \, (n-1) \, \left( \Delta_0 - \frac{x^2 + y^2}{2} \left( \frac{1}{R_1} - \frac{1}{R_2} \right) \right)}
+\end{equation}\
+
+The physical properties of the lens (that is n, $R_1$, and $R_2$) can be combined into a single number f called the \textbf{focal length}, which is defined by:
+\begin{equation}\label{eq:focal_length}
+    \frac{1}{f} = (n-1) \left( \frac{1}{R_1} - \frac{1}{R_2} \right)
+\end{equation}
+When f is positive, the lens is called a converging lens or positive lens, then spherical wave is converging toward a point on the lens axis a distance \textbf{f} behind the lens.
  
+Neglecting the constant phase factor, which we shall drop hereafter, the phase transformation may now be rewritten
+\begin{equation}\label{eq:phase_delay_lens_simple}
+    t_l(x,y) = e^{-j \, \frac{k}{2f} \, (x^2 + y^2)}
+\end{equation}
+This equation will serve as our basic representation of the effects of a thin lens on an incident disturance. Since in our derivation, we did not consider the sign of $R_1$ and $R_2$, the focal length $f$ is therefore general to be applied to any type of lens, as long as the sign convention for the radius of curvature is respected. 
+
+\subsubsection{Fourier transforming property of lenses}
+One of the most important properties of converging lenses is that they can perform two-dimensional Fourier transformation on the incident disturbance. This complicated analog operation can be performed with exextreme simplicity in an optical system, taking advantage of the basic laws of propagation and diffraction of light.
+
+
+\paragraph{Back focal plane} The back focal plane of a converging lens is the plane normal to the lens axis and located at a distance f behind the lens, where f is the focal length of the lens.
+\paragraph{Input transparencies} The input transparency is a thin planar object placed in front of the lens, capable of modulating the amplitude and/or phase of the incident light. 
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{figures/figure5.5.png}
+\caption{\label{fig:fig55}Geometries for perfoming the Fourier transform operator with a converging lens.}
+\end{figure}
+
+Figure \ref{fig:fig55} illustrates the arrangement that will be considered here, the input is placed a distance d in front of the lens, is illuminated by a normally incident plane wave of amplitude $A$, and the input transmittance is denoted by $t_A(x,y)$. Let $F_o(f_X, f_Y)$ represent the Fourier spectrum of the light transmitted by the input transparency, and $F_l(f_X, f_Y)$ the Fourier spectrum of the light incident on the lens,
+\begin{equation}
+    F_o(f_X, f_Y) = \mathcal{F}(A \, t_A(x,y)) \quad \quad F_l(f_X, f_Y) = \mathcal{F}(U_l(x,y))
+\end{equation}
+where $U_l(x,y)$ is the complex field across the entrance plane of the lens which,according to the fresnel integral~\cref{eq:fresnel_integral}, can be expressed as:
+\begin{align}
+    U_l(x,y) &= \frac{e^{jkd}}{j\lambda d}\int_\Sigma A \, t_A(\xi,\eta) e^{j\frac{k}{2d}\left((x-\xi)^2 + (y-\eta)^2\right)} \,d\xi d\eta\\
+    &= \left((A\, t_A) \ast h\right) (x,y)
+\end{align}
+where $h(x,y) = \frac{e^{jkd}}{j\lambda d} e^{j\frac{k}{2d}(x^2 + y^2)}$ 
+
+We can now express the Fourier spectrum of the light incident on the lens as follows:
+\begin{align}
+    F_l(f_X, f_Y) &= \mathcal{F}(U_l(x,y)) \\
+    &= \mathcal{F}\left( \left((A\, t_A) \ast h\right) (x,y) \right) \\
+    &= F_o(f_X, f_Y) \cdot H(f_X, f_Y)
+\end{align}
+where $H(f_X, f_Y) = \mathcal{F}(h)(f_X, f_Y)$ is the Fourier spectrum of the impulse response $h(x,y)$, which can be calculated as follows:
+\begin{align}
+    H(f_X, f_Y) &= \mathcal{F}(h)(f_X, f_Y) \\
+    &= \frac{e^{jkd}}{j\lambda d} \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} e^{j\frac{k}{2d}(x^2 + y^2)} e^{-j2\pi(f_X x + f_Y y)} \, dx dy \\
+    &= \frac{e^{jkd}}{j\lambda d} \int_{-\infty}^{\infty} e^{j\frac{k}{2d}x^2} e^{-j2\pi f_X x} \, dx \int_{-\infty}^{\infty} e^{j\frac{k}{2d}y^2} e^{-j2\pi f_Y y} \, dy \\
+    &= \frac{e^{jkd}}{j\lambda d} e^{-j \pi \lambda d (f_X^2)} e^{-j \pi \lambda d (f_Y^2)} \\
+    &= \frac{e^{jkd}}{j\lambda d} e^{-j \pi \lambda d (f_X^2 + f_Y^2)}
+\end{align}
+
+The finite extent of the lens can be accounted for by associating with the lens a pupil function $P(x,y)$ defined by:
+\begin{equation}
+    P(x,y) = \begin{cases}
+1 & \text{if } (x,y) \text{ is within the lens aperture} \\
+0 & \text{otherwise}
+\end{cases}
+\end{equation}
+
+Thus the amplitude distribution behind the lens can be expressed as:
+\begin{align}
+    U_l'(x,y) &= U_l(x,y) P(x,y) t_l(x,y) \\
+    &= U_l(x,y) P(x,y) e^{-j \, \frac{k}{2f} \, (x^2 + y^2)}
+\end{align}
+
+To find the distribution U
+
+
 
 \end{document}
-
-
