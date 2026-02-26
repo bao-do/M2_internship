@@ -2,6 +2,7 @@
 __pycache__
 
 # Large files
+*.pdf
 *.pt 
 *.pth 
 *.png
@@ -18,6 +19,8 @@ patch_identification/save
 *.log
 *.bbl
 *.blg
+*.toc
+*.out
 
 
 
