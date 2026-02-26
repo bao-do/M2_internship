@@ -1,0 +1,24 @@
+.dist 
+__pycache__
+
+# Large files
+*.pt 
+*.pth 
+*.png
+imgs 
+ckpt
+patch_identification/save
+
+# latex compilation files
+*.aux
+*.synctex.gz
+*.log
+*.fdb_latexmk
+*.fls
+*.log
+*.bbl
+*.blg
+
+
+
+*/*.ipynb_checkpoints
